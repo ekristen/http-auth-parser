@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/ekristen/http-auth-parser.svg)](https://travis-ci.org/ekristen/http-auth-parser)
+[![Build Status](https://travis-ci.org/ekristen/http-auth-parser.svg)](https://travis-ci.org/ekristen/http-auth-parser) [![Dependency Status](https://david-dm.org/ekristen/http-auth-parser.svg)](https://david-dm.org/ekristen/http-auth-parser) [![devDependency Status](https://david-dm.org/ekristen/http-auth-parser/dev-status.svg)](https://david-dm.org/ekristen/http-auth-parser#info=devDependencies)
 
 # http-auth-parser
 
