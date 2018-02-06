@@ -1,34 +1,42 @@
-var debug = require('debug')('http-auth-parser:parser:bearer')
-var xtend = require('xtend')
-var jwt = require('jsonwebtoken')
+const debug = require('debug')('http-auth-parser:bearer');
+const xtend = require('xtend');
+const jwt = require('jsonwebtoken');
 
-var HttpAuthParserBearer = function(req) {
-
+const HttpAuthParserBearer = function (req) {
   if (typeof req.headers['authorization'] == 'undefined') {
-    return debug('authorization header is missing')
+    req.auth = null;
+    return debug('authorization header is missing');
   }
 
-  var auth_parts = req.headers['authorization'].split(' ')
+  const [ type, credentials ] = req.headers['authorization'].split(' ');
 
-  if (auth_parts[0] != 'Bearer') {
-    return debug('authorization header is not bearer')
-  }
-
-  try { 
-    var decoded = jwt.decode(auth_parts[1])
-  } catch(e) {
-    debug('it is not a JWT token')
-    return
+  if (type !== 'Bearer') {
+    return debug('authorization header is not bearer');
   }
 
   req.auth = xtend({
     type: 'bearer',
-    token: auth_parts[1],
-    jwt: {
-      token: auth_parts[1],
-      claims: decoded
-    } || false
-  }, req.auth)
+    token: credentials
+  }, req.auth);
+
+  try { 
+    const decoded = jwt.decode(credentials);
+
+    if (decoded !== null) {
+      req.auth = xtend({
+        jwt: {
+          token: credentials,
+          claims: decoded
+        }
+      }, req.auth);
+    } else {
+      req.auth = xtend({
+        jwt: false
+      }, req.auth);
+    }
+  } catch(e) {
+    return debug('it is not a JWT token');
+  }
 }
 
-module.exports = HttpAuthParserBearer
+module.exports = HttpAuthParserBearer;

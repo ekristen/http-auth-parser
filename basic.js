@@ -1,29 +1,25 @@
-var debug = require('debug')('http-auth-parser:parser:basic')
+const debug = require('debug')('http-auth-parser:basic');
 
-module.exports = function(req) {
+module.exports = function (req) {
   if (typeof req.headers['authorization'] == 'undefined') {
     // authorization does not exist
-    debug('no authorization header found')
-    return
+    req.auth = null;
+    return debug('no authorization header found');
   }
 
-  var auth_header = req.headers['authorization']
-  
-  var auth_parts = auth_header.split(' ')
-  
-  if (auth_parts[0] != 'Basic') {
+  const [ type, credentials ] = req.headers['authorization'].split(' ');
+
+  if (type !== 'Basic') {
     // we aren't dealing with basic auth
-    return debug('auth type not basic')
+    return debug('auth type not basic');
   }
 
-  var auth_plain = new Buffer(auth_parts[1], 'base64').toString()
-  var auth_creds = auth_plain.split(':')
+  const auth_plain = new Buffer(credentials, 'base64').toString();
+  const [ username, password ] = auth_plain.split(':');
 
   req.auth = {
-    type: 'basic',
-    username: auth_creds[0],
-    password: auth_creds[1]
-  }
-  
-  return req.auth
+    type: 'basic', username, password
+  };
+
+  return req.auth;
 }

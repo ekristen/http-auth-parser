@@ -1,10 +1,10 @@
-var basic = require('./basic')
-var bearer = require('./bearer')
+const basic = require('./basic');
+const bearer = require('./bearer');
 
-var HttpAuthParser = function(req) {
-  basic(req)
-  bearer(req)
-}
+const HttpAuthParser = function (req) {
+  basic(req);
+  bearer(req);
+};
 
-module.exports = HttpAuthParser
+module.exports = HttpAuthParser;
 

@@ -1,47 +1,49 @@
-var test = require('tape')
-var parser = require('./parser')
+const test = require('tape');
+const parser = require('./parser');
 
-test('basic authentication', function(t) {
-  var req = {
+test('basic authentication', function (t) {
+  const req = {
     headers: {
       'authorization': 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=='
     }
-  }
+  };
 
-  parser(req) 
+  parser(req);
 
-  t.equal(req.auth.type, 'basic')
-  t.equal(req.auth.username, 'Aladdin')
-  t.equal(req.auth.password, 'open sesame')
-  t.end()
-})
+  t.equal(req.auth.type, 'basic');
+  t.equal(req.auth.username, 'Aladdin');
+  t.equal(req.auth.password, 'open sesame');
+  t.end();
+});
 
 
-test('bearer authentication', function(t) {
-  var req = {
+test('bearer authentication', function (t) {
+  const req = {
     headers: {
       'authorization': 'Bearer thisisjustmytesttoken'
     }
-  }
+  };
 
-  parser(req)
+  parser(req);
   
-  t.equal(req.auth.type, 'bearer')
-  t.end()
-})
+  t.equal(req.auth.type, 'bearer');
+  t.equal(req.auth.token, 'thisisjustmytesttoken');
+  t.equal(req.auth.jwt, false);
+  t.end();
+});
 
-test('bearer authentication jwt token', function(t) {
-  var req = {
+test('bearer authentication jwt token', function (t) {
+  const req = {
     headers: {
       'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ'
     }
-  }
+  };
 
-  parser(req)
+  parser(req);
 
-  t.equal(req.auth.type, 'bearer')
-  t.equal(req.auth.jwt.claims.sub, '1234567890')
-  t.equal(req.auth.jwt.claims.name, 'John Doe')
-  t.equal(req.auth.jwt.claims.admin, true)
-  t.end()
-})
+  t.equal(req.auth.type, 'bearer');
+  t.equal(req.auth.jwt.claims.sub, '1234567890');
+  t.equal(req.auth.jwt.claims.name, 'John Doe');
+  t.equal(req.auth.jwt.claims.admin, true);
+  t.end();
+});
